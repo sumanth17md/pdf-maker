@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- SEO Meta Tags -->
+    <title>PDF Maker - Every tool you need to work with PDFs in one place</title>
+    <meta name="title" content="PDF Maker - Every tool you need to work with PDFs in one place">
+    <meta name="description" content="100% FREE, private, and ad-free in-browser PDF tools. Convert images to A4 PDF, compress under 200KB/500KB for scholarships, rotate, and enhance documents.">
+    <meta name="keywords" content="pdf maker, image to pdf, ilovepdf alternative, scholarship pdf converter, compress pdf under 200kb, rotate pdf, vtu marks card pdf">
+    <meta name="author" content="Sumanth">
+
+    <!-- Open Graph Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PDF Maker - Every tool you need to work with PDFs in one place">
+    <meta property="og:description" content="All are 100% FREE and easy to use! Convert, compress, rotate, and enhance scholarship documents with zero ads.">
+    <meta property="og:image" content="favicon.svg">
+
+    <!-- Connect our stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Load jsPDF library locally -->
+    <script src="jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- 1. iLovePDF Style Navigation Bar -->
+    <nav class="site-nav">
+        <div class="nav-left">
+            <a href="#" class="brand-logo">
+                PDF <span class="brand-heart">❤️</span> MAKER
+            </a>
+            <ul class="nav-links">
+                <li><a href="#uploadWorkspace" class="active">IMAGE TO PDF</a></li>
+                <li><a href="#uploadWorkspace">COMPRESS PDF</a></li>
+                <li><a href="#uploadWorkspace">ROTATE PDF</a></li>
+                <li><a href="#featuresGrid">ALL PDF TOOLS ▾</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-right">
+            <button class="btn-nav-action" onclick="document.getElementById('uploadWorkspace').scrollIntoView({ behavior: 'smooth' })">
+                CONVERT NOW
+            </button>
+        </div>
+    </nav>
+
+    <!-- 2. iLovePDF Hero Header -->
+    <section class="hero-section">
+        <h1 class="hero-title">Every tool you need to work with PDFs in one place</h1>
+        <p class="hero-description">
+            Every tool you need to use PDFs, right at your fingertips. All are 100% FREE, private, and easy to use! 
+            Convert photos, marks cards, compress under 200KB, rotate, and enhance scholarship documents with zero ads.
+        </p>
+
+        <!-- Category Filter Pills -->
+        <div class="filter-pills-row">
+            <button class="pill-item active" onclick="filterCards('all', this)">All</button>
+            <button class="pill-item" onclick="filterCards('convert', this)">Image to PDF</button>
+            <button class="pill-item" onclick="filterCards('compress', this)">Scholarship Compress</button>
+            <button class="pill-item" onclick="filterCards('rotate', this)">Rotate &amp; Orient</button>
+            <button class="pill-item" onclick="filterCards('scanner', this)">Document Scanner</button>
+            <button class="pill-item" onclick="filterCards('privacy', this)">100% Safe &amp; Secure</button>
+        </div>
+    </section>
+
+    <!-- 3. Main Interactive Workspace -->
+    <div class="app-container" id="uploadWorkspace">
+        <div class="upload-card-wrapper">
+            
+            <!-- Upload Options Grid -->
+            <div class="upload-options-grid">
+                
+                <!-- OPTION 1: Browse Button -->
+                <div class="option-box browse-option">
+                    <span class="option-tag">OPTION 1</span>
+                    <h3>Select from Your Laptop</h3>
+                    <p>Click below to choose photos or scanned marks cards</p>
+                    
+                    <input 
+                        type="file" 
+                        id="imageInput" 
+                        accept="image/*" 
+                        multiple 
+                        class="visually-hidden" 
+                    />
+                    <label for="imageInput" class="btn-browse">
+                        📁 Select Image Files
+                    </label>
+                </div>
+
+                <!-- Divider -->
+                <div class="options-divider">
+                    <span>OR</span>
+                </div>
+
+                <!-- OPTION 2: Drag & Drop Zone -->
+                <div id="dropZone" class="option-box drop-zone">
+                    <span class="option-tag">OPTION 2</span>
+                    <div class="icon">📥</div>
+                    <h3>Drag &amp; Drop Images Here</h3>
+                    <p>Drag photos from your Windows folder and release them here</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Pre-conversion Settings (Compression & Orientation) -->
+        <section class="settings-card">
+            <div class="setting-item">
+                <label for="compressionQuality">🎚️ Scholarship File Size Target:</label>
+                <select id="compressionQuality">
+                    <option value="0.7" selected>Standard (Balanced • Under 500KB)</option>
+                    <option value="0.5">High Compression (Smallest • Under 200KB for SSP/NSP)</option>
+                    <option value="0.92">Maximum Clarity (Original Size)</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label for="pageOrientation">📐 Page Orientation:</label>
+                <select id="pageOrientation">
+                    <option value="auto" selected>✨ Auto-Detect (Matches each photo automatically)</option>
+                    <option value="portrait">Portrait (Standard Vertical A4)</option>
+                    <option value="landscape">Landscape (Horizontal Certificates)</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Action Bar: Status + Clear All + Convert Button -->
+        <section class="action-bar">
+            <span id="statusText">No images selected yet.</span>
+            <div class="action-buttons">
+                <button id="clearAllBtn" class="btn-clear" style="display: none;" title="Remove all images">
+                    🧹 Clear All
+                </button>
+                <button id="convertBtn" class="btn-primary" disabled>
+                    <span>Convert to PDF →</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Download Card (Revealed ONLY after conversion!) -->
+        <section id="downloadSection" class="download-card" style="display: none;">
+            <div class="download-header">
+                <div class="success-icon">🎉</div>
+                <div>
+                    <h3>Your PDF is Ready!</h3>
+                    <p id="pdfSizeNotice">Compiled successfully</p>
+                </div>
+            </div>
+
+            <div class="naming-form">
+                <label for="pdfFileName">Name your PDF file:</label>
+                <div class="input-with-extension">
+                    <input 
+                        type="text" 
+                        id="pdfFileName" 
+                        value="scholarship_documents" 
+                        placeholder="e.g. Sumanth_MarksCard" 
+                    />
+                    <span class="extension-label">.pdf</span>
+                </div>
+            </div>
+
+            <div class="download-actions">
+                <button id="finalDownloadBtn" class="btn-primary btn-download">
+                    ⬇️ Download PDF
+                </button>
+                <button id="previewPdfBtn" class="btn-secondary">
+                    👁️ Preview in New Tab
+                </button>
+            </div>
+        </section>
+
+        <!-- Thumbnail Preview Section -->
+        <section class="preview-section">
+            <h2>Selected Documents</h2>
+            <div id="imageGrid" class="image-grid"></div>
+        </section>
+
+        <!-- 4. iLovePDF Feature Cards Showcase Grid -->
+        <section class="features-showcase-section" id="featuresGrid">
+            <h3 class="features-showcase-title">Built-in PDF Tools</h3>
+            
+            <div class="ilove-cards-grid">
+                
+                <!-- Card 1 -->
+                <div class="tool-card" data-category="convert">
+                    <div class="tool-badge-icon badge-red">📄</div>
+                    <h4>Image to PDF</h4>
+                    <p>Convert JPG, PNG, and phone camera photos into standardized A4 documents instantly.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="tool-card" data-category="compress">
+                    <div class="tool-badge-icon badge-green">🎚️</div>
+                    <h4>Scholarship Compress</h4>
+                    <p>Reduce file size under 200KB or 500KB while preserving high text sharpness for SSP &amp; NSP.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="tool-card" data-category="rotate">
+                    <div class="tool-badge-icon badge-orange">🔄</div>
+                    <h4>90° Rotate PDF</h4>
+                    <p>Fix sideways or upside-down certificate photos in one click with 2D Canvas math.</p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="tool-card" data-category="scanner">
+                    <div class="tool-badge-icon badge-purple">🎨</div>
+                    <h4>Document Scanner</h4>
+                    <p>Auto-Enhance faint ink, Xerox B&amp;W mode, and brighten dark indoor room shadows.</p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="tool-card" data-category="rotate">
+                    <div class="tool-badge-icon badge-blue">📐</div>
+                    <h4>Auto-Orientation</h4>
+                    <p>Intelligently formats vertical marks cards to Portrait and horizontal awards to Landscape.</p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="tool-card" data-category="privacy">
+                    <div class="tool-badge-icon badge-emerald">🔒</div>
+                    <h4>100% Safe &amp; Private</h4>
+                    <p>Zero server uploads. Your confidential Aadhaar and income certificates stay strictly on your device.</p>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- 5. Developer Portfolio Footer -->
+    <footer class="app-footer">
+        <p>Designed &amp; Built by <strong>Sumanth</strong> • Information Science &amp; Engineering (5th Sem, VTU)</p>
+        <p class="footer-sub">🔒 100% Safe &amp; Secure • Client-Side Processing • Zero Ads, No Hassle</p>
+    </footer>
+
+    <!-- Connect our JavaScript file -->
+    <script src="app.js"></script>
+
+    <!-- Filter Pills Script -->
+    <script>
+        function filterCards(category, btnElement) {
+            // Update active pill
+            document.querySelectorAll('.pill-item').forEach(pill => pill.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Filter cards
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // If a tool pill is clicked, scroll to workspace
+            if (category !== 'all') {
+                document.getElementById('uploadWorkspace').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
